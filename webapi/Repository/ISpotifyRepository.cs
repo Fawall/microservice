@@ -5,7 +5,7 @@ namespace webapi.Repository
 {
     public interface ISpotifyRepository
     {
-        public Task<string> TrackName();
+        public Task<string> TrackName(string styleMusic);
 
 
 
