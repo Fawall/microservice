@@ -6,6 +6,8 @@ namespace webapi.Repository
         public string PopMusic();
         public string RockMusic();
 
+        public string RecebeTipoMusica(string styleMusic);
+
          
     }
 }
