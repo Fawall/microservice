@@ -20,7 +20,7 @@ namespace webapi.Repository
             _config = config;
         }
 
-        public async Task<string> TrackName()
+        public async Task<string> TrackName(string styleMusic)
         {
             SpotifyWebAPI spotify;
             
@@ -35,8 +35,10 @@ namespace webapi.Repository
             TokenType = token.TokenType
             };
 
-            FullAlbum album = await spotify.GetAlbumAsync(_randomMusics.PartyMusic());
-      
+            
+
+            FullAlbum album = await spotify.GetAlbumAsync(_randomMusics.RecebeTipoMusica(styleMusic));
+
             return album.Name;
 
 
