@@ -37,16 +37,30 @@ namespace webapi.Controllers {
             
             Desearilize desearialize = JsonConvert.DeserializeObject<Desearilize>(responseBody);
 
-            var musica = await _spotify.TrackName();
 
-            if(desearialize.Temp > 5)
+            string musica;
+            if(desearialize.Temp >= 30)
             {
-                return Ok ($"Temperatura: {desearialize.Temp}\n Cidade: {desearialize.city} \n Spotify: {musica}");
+                musica = await _spotify.TrackName("PartyMusic");
+
+                return Ok ($"Temperatura: {desearialize.Temp}\n" +
+                $"Cidade: {desearialize.city} \n Spotify: {musica}");
             
             }
-            else
+
+            else if (desearialize.Temp >= 15 && desearialize.Temp < 30)
             {
-                return Ok("é pra funcionar");
+                musica = await _spotify.TrackName("PopMusic");
+
+                return Ok ($"Temperatura: {desearialize.Temp}\n" +
+                $"Cidade: {desearialize.city} \n Spotify: {musica}");
+            }
+
+            else
+            {   
+                musica = await _spotify.TrackName("RockMusic");
+                return Ok($"Temperatura: {desearialize.Temp}\n" +
+                $"Cidade: {desearialize.city} \n Spotify: {musica}");
             }
 
 
