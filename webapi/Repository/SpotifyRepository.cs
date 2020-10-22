@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
 using SpotifyAPI.Web.Models;
 using SpotifyAPI.Web;
@@ -12,17 +13,20 @@ namespace webapi.Repository
     public class SpotifyRepository : ISpotifyRepository
     {
         private readonly IRandomMusics _randomMusics;
-        public SpotifyRepository(IRandomMusics randomMusics)
+        private readonly IConfiguration _config;
+        public SpotifyRepository(IRandomMusics randomMusics, IConfiguration config)
         {
             _randomMusics = randomMusics;
+            _config = config;
         }
 
         public async Task<string> TrackName()
         {
             SpotifyWebAPI spotify;
             
+            CredentialsAuth auth = new CredentialsAuth(_config.GetSection("AppSettings:clientId").Value,
+            _config.GetSection("AppSettings:clientSecret").Value);
 
-            CredentialsAuth auth = new CredentialsAuth("12733ce1e5a44b0fbd0aaf839169ce84", "a4c0256914aa48c3a03f1cc8e395c393");
             Token token = await auth.GetToken();
             
             spotify = new SpotifyWebAPI()

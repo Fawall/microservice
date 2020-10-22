@@ -13,10 +13,13 @@ namespace webapi.Controllers {
     {
         private readonly ISpotifyRepository _spotify;
         private readonly IHttpClientFactory _httpclient;
-        public TemperatureController (ISpotifyRepository spotify, IHttpClientFactory httpclient) {
+        private readonly IConfiguration _config;
+
+        public TemperatureController (ISpotifyRepository spotify, IHttpClientFactory httpclient, IConfiguration config) {
             _spotify = spotify;
             _httpclient = httpclient;
-            
+            _config = config;
+ 
         }
 
         [HttpGet ("{city}")]
@@ -24,7 +27,7 @@ namespace webapi.Controllers {
 
             var client = _httpclient.CreateClient();
 
-            string API = $"http://api.hgbrasil.com/weather?array_limit=2&fields=only_results,temp,city&key=5426ad1e&city_name={city}";
+            string API = $"http://api.hgbrasil.com/weather?array_limit=2&fields=only_results,temp,city&key={_config.GetSection("AppSettings:key").Value}&city_name={city}";
 
             HttpResponseMessage ResponseTemperature = await client.GetAsync(API);            
             string responseBody = await ResponseTemperature.Content.ReadAsStringAsync();
