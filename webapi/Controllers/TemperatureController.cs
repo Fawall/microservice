@@ -27,7 +27,7 @@ namespace webapi.Controllers {
 
             var client = _httpclient.CreateClient();
 
-            string API = $"http://api.hgbrasil.com/weather?array_limit=2&fields=only_results,temp,city&key={_config.GetSection("AppSetting:key").Value}&city_name={city}";
+            string API = $"http://api.hgbrasil.com/weather?array_limit=2&fields=only_results,temp,city&key={_config.GetSection("AppSettings:key").Value}&city_name={city}";
 
             HttpResponseMessage ResponseTemperature = await client.GetAsync(API);            
             string responseBody = await ResponseTemperature.Content.ReadAsStringAsync();

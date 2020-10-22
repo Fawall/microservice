@@ -25,7 +25,7 @@ namespace webapi.Repository
             SpotifyWebAPI spotify;
             
             CredentialsAuth auth = new CredentialsAuth(_config.GetSection("AppSettings:clientId").Value,
-            _config.GetSection("AppSetting:clientSecret").Value);
+            _config.GetSection("AppSettings:clientSecret").Value);
 
             Token token = await auth.GetToken();
             
