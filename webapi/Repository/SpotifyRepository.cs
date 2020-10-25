@@ -19,11 +19,10 @@ namespace webapi.Repository
             _randomMusics = randomMusics;
             _config = config;
         }
+        SpotifyWebAPI spotify;
 
         public async Task<string> TrackName(string styleMusic)
-        {
-            SpotifyWebAPI spotify;
-            
+        {            
             CredentialsAuth auth = new CredentialsAuth(_config.GetSection("AppSettings:clientId").Value,
             _config.GetSection("AppSettings:clientSecret").Value);
 
@@ -36,8 +35,7 @@ namespace webapi.Repository
             };
 
             
-
-            FullAlbum album = await spotify.GetAlbumAsync(_randomMusics.RecebeTipoMusica(styleMusic));
+            FullAlbum album = await spotify.GetAlbumAsync(_randomMusics.GetTypeMusic(styleMusic));
 
             return album.Name;
 
