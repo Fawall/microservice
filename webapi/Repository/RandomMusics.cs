@@ -5,10 +5,10 @@ namespace webapi.Repository
 {
     public class RandomMusics : IRandomMusics
     {
-        public string RecebeTipoMusica(string recebeMusicas)
+        public string GetTypeMusic(string getMusic)
         {
 
-            string[] TipoDeMusica = {recebeMusicas};
+            string[] TipoDeMusica = {getMusic};
 
             if(TipoDeMusica[0] == "PopMusic")
                 return PartyMusic();
@@ -20,7 +20,6 @@ namespace webapi.Repository
                 return RockMusic();
 
         }
-
         public string PartyMusic()
         {
             string[] idAlbunsForParty = {"4TqvKXoNxzUt3KFvb2kMOL", "2v4Crisjd4sT782Jvn7ISC", "7v3QqNKdhBQ6n3IrjZO5mq"};
@@ -41,16 +40,13 @@ namespace webapi.Repository
             "0CxPbTRARqKUYighiEY9Sz", "6Eycw3dwcDMEFSqkUvLQ7g"};
 
             return RandomMusic(idAlbunsForRock);
-
-
         }
-
-        public string RandomMusic(string[] musicas)
+        public string RandomMusic(string[] musics)
         {
             Random random = new Random();
             
-            List<string> nomeAlbum = new List<string>(musicas);
-            string index = nomeAlbum[random.Next(nomeAlbum.Count)];
+            List<string> AlbumName = new List<string>(musics);
+            string index = AlbumName[random.Next(AlbumName.Count)];
       
             return index;
         }
