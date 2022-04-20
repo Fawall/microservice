@@ -37,12 +37,13 @@ namespace webapi
             options.AddPolicy("CorsPolicy", builder => 
                 builder.AllowAnyOrigin()
                 .AllowAnyMethod()
-                .AllowAnyMethod()));
+                .AllowAnyHeader()));
 
             services.AddHttpClient<TemperatureController>();
             services.AddScoped<Services>();
             services.AddScoped<ISpotifyRepository, SpotifyRepository>();  
             services.AddScoped<IRandomMusics,RandomMusics>();  
+            services.AddScoped<IClientRepository, ClientRepository>();
             
 
         }

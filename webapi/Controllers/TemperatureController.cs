@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
 using webapi.Repository;
+using System;
 
 namespace webapi.Controllers {
     [Route ("/api/[controller]")]
@@ -13,57 +14,43 @@ namespace webapi.Controllers {
     public class TemperatureController : ControllerBase
     {
         private readonly ISpotifyRepository _spotify;
-        private readonly IHttpClientFactory _httpclient;
-        private readonly IConfiguration _config;
+        private readonly IClientRepository _client;
         private readonly Services _webServices;
-        public TemperatureController (ISpotifyRepository spotify, IHttpClientFactory httpclient, IConfiguration config,
-        Services services) {
+        
+        public TemperatureController (ISpotifyRepository spotify, Services services, IClientRepository client) {
             _spotify = spotify;
-            _httpclient = httpclient;
-            _config = config;
             _webServices = services;
+            _client = client;
  
         }
 
         [EnableCors]
         [HttpGet ("{city}")]
         public async Task<ActionResult<Services>> Temperature(string city) {
-
-            var client = _httpclient.CreateClient();
-       
-            string API = $"http://api.hgbrasil.com/weather?array_limit=2&fields=only_results,temp,city&key={_config.GetSection("AppSettings:key").Value}&city_name={city}";
-
-            HttpResponseMessage ResponseTemperature = await client.GetAsync(API);            
-            string responseBody = await ResponseTemperature.Content.ReadAsStringAsync();
-
-            client.Dispose();
-            ResponseTemperature.Dispose();
+            
+            string responseBody = await _client.GetTemperature(city);
             
             Deserialize deserialize = JsonConvert.DeserializeObject<Deserialize>(responseBody);
 
-            _webServices.Temp = deserialize.Temp;
-            _webServices.City = deserialize.city;
+            Services serviceModel = new Services();
 
-            if(_webServices.Temp >= 30)
+            (serviceModel.City, serviceModel.Temp) = (deserialize.city, deserialize.Temp);
+
+            if(serviceModel.Temp >= 30)
             {
-                _webServices.Music = await _spotify.TrackName("PartyMusic");
-                
-                return _webServices;
-                
+                serviceModel.Music = await _spotify.TrackName("PartyMusic");                
+                return serviceModel;     
             }
-            else if (_webServices.Temp >= 15 && _webServices.Temp < 30)
+
+            else if (serviceModel.Temp >= 15 && _webServices.Temp < 30)
             {
-                _webServices.Music = await _spotify.TrackName("PopMusic");
-                return _webServices;
+                serviceModel.Music = await _spotify.TrackName("PopMusic");
+                return serviceModel;
             }
 
-            else
-            {   
-                _webServices.Music = await _spotify.TrackName("RockMusic");    
-                return _webServices;
-            }
+            serviceModel.Music = await _spotify.TrackName("RockMusic");    
+            return serviceModel;
 
-            // return Ok ($"Temperatura: {desearialize.Temp}\n Cidade: {desearialize.city}");
         }
 
     }
