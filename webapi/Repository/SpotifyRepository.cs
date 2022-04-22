@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using System.Threading.Tasks;
-using SpotifyAPI.Web.Models;
 using SpotifyAPI.Web;
 using SpotifyAPI.Web.Auth;
 using System.Collections.Generic;
@@ -19,26 +18,20 @@ namespace webapi.Repository
             _randomMusics = randomMusics;
             _config = config;
         }
-        SpotifyWebAPI spotify;
-
         public async Task<string> TrackName(string styleMusic)
         {            
-            CredentialsAuth auth = new CredentialsAuth(_config.GetSection("AppSettings:clientId").Value,
-            _config.GetSection("AppSettings:clientSecret").Value);
+            string clientId =  "";
+            string clientSecret = "";
 
-            Token token = await auth.GetToken();
+            var config = SpotifyClientConfig.CreateDefault();
+            var request = new ClientCredentialsRequest(clientId, clientSecret);
             
-            spotify = new SpotifyWebAPI()
-            {
-            AccessToken = token.AccessToken,
-            TokenType = token.TokenType
-            };
+            var response = await new OAuthClient(config).RequestToken(request);
 
-            
-            FullAlbum album = await spotify.GetAlbumAsync(_randomMusics.GetTypeMusic(styleMusic));
+            var spotify = new SpotifyClient(config.WithToken(response.AccessToken));
+            FullAlbum album = await spotify.Albums.Get(_randomMusics.GetTypeMusic(styleMusic));
 
             return album.Name;
-
 
         }
 
