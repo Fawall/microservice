@@ -16,7 +16,7 @@ namespace webapi.Repository
         
         public async Task<string> GetTemperature(string city)
         {
-            string API = $"http://api.hgbrasil.com/weather?array_limit=2&fields=only_results,temp,city&key={_config.GetSection("AppSettings:KeyHG").Value}&city_name={city}";
+            string API = $"http://api.hgbrasil.com/weather?array_limit=2&fields=only_results,temp,city&key={_config.GetSection("Keys:KeyHG").Value}&city_name={city}";
 
             HttpClient client = _httpClient.CreateClient();
 

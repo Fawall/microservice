@@ -20,11 +20,8 @@ namespace webapi.Repository
         }
         public async Task<string> TrackName(string styleMusic)
         {            
-            string clientId =  "";
-            string clientSecret = "";
-
             var config = SpotifyClientConfig.CreateDefault();
-            var request = new ClientCredentialsRequest(clientId, clientSecret);
+            var request = new ClientCredentialsRequest(_config.GetSection("Keys:clientId").Value, _config.GetSection("Keys:clientSecret").Value);
             
             var response = await new OAuthClient(config).RequestToken(request);
 
