@@ -7,13 +7,12 @@ namespace webapi.Repository
     {
         public string GetTypeMusic(string getMusic)
         {
-
-            string[] TipoDeMusica = {getMusic};
-
-            if(TipoDeMusica[0] == "PopMusic")
+            string TipoDeMusica = getMusic;
+            
+            if(TipoDeMusica == "PopMusic")
                 return PartyMusic();
 
-            else if(TipoDeMusica[0] == "PartyMusic")
+            else if(TipoDeMusica == "PartyMusic")
                 return PartyMusic();
             
             else
